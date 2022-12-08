@@ -6,11 +6,9 @@ document.getElementById("current-year").textContent = dt.getFullYear();
 
 // Selecting Elements
 const btnAgain = document.querySelector(".again");
-const number = document.querySelector(".number");
 const btnCheck = document.querySelector(".check");
+const number = document.querySelector(".number");
 let message = document.querySelector(".message");
-// let score = document.querySelector(".score").textContent;
-// let highScore = document.querySelector(".highscore");
 
 let score = 20;
 let highScore = 0;
@@ -22,45 +20,47 @@ console.log(randomNumber);
 btnCheck.addEventListener("click", function () {
   const guess = Number(document.querySelector(".guess").value);
 
-  if (guess == "") {
-    message.textContent = "No Number!";
-  } else {
-    if (guess === randomNumber) {
-      message.textContent = "Correct Number!";
-      document.querySelector("body").style.backgroundColor = "green";
-      number.textContent = guess;
-      number.style.width = "30rem";
-      if (score > highScore) highScore = score;
-      document.querySelector(".highscore").textContent = highScore;
-    }
+  // if no input
+  if (!guess) {
+    message.textContent = "⛔ No Number!";
 
-    if (guess !== randomNumber) {
-      if (guess > randomNumber) {
-        message.textContent = "Too High!";
-      }
+    // if the guess is correct
+  } else if (guess === randomNumber) {
+    message.textContent = "🎉 Correct Number!";
+    document.querySelector("body").style.backgroundColor = "green";
+    document.querySelector(".guess").disabled = true;
+    btnAgain.classList.add("active");
+    number.textContent = guess;
+    number.style.width = "30rem";
+    if (score > highScore) highScore = score;
+    document.querySelector(".highscore").textContent = highScore;
 
-      if (guess < randomNumber) {
-        message.textContent = "Too Low!";
-      }
+    // if the guess is incorrect
+  } else if (guess !== randomNumber) {
+    if (score > 1) {
+      message.textContent =
+        guess > randomNumber ? "📈 Too High!" : "📉 Too Low!";
       score--;
       document.querySelector(".score").textContent = score;
-    }
-    if (score <= 0) {
-      message.textContent = "You Lose!";
+    } else {
+      message.textContent = "😓 You Lose!";
       document.querySelector(".score").textContent = "0";
       document.querySelector("body").style.background = "red";
+      btnAgain.classList.add("active");
     }
   }
 });
 
 btnAgain.addEventListener("click", function () {
-  message.textContent = "Start Guessing...";
-  document.querySelector("body").style.background = "#222";
-  number.style.width = "15rem";
-  number.textContent = "?";
-  document.querySelector(".guess").value = "";
   score = 20;
-  document.querySelector(".score").textContent = score;
   randomNumber = Math.floor(Math.random() * 20) + 1;
   console.log(randomNumber);
+  message.textContent = "Start Guessing...";
+  number.textContent = "?";
+  btnAgain.classList.remove("active");
+  document.querySelector(".guess").value = "";
+  document.querySelector(".score").textContent = score;
+  document.querySelector("body").style.background = "#222";
+  document.querySelector(".guess").disabled = false;
+  number.style.width = "15rem";
 });
